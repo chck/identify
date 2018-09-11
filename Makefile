@@ -38,6 +38,20 @@ run-local:
 run-docker:
 	docker run --rm -p 8000:8000 -e PORT=8000 $(IMAGE):$(RECENT)
 
+.PHONY: run-k8s-local ## Run server on local k8s
+run-k8s-local:
+	kubectl config use-context docker-for-desktop
+	kubectl apply -f k8s/deployments/api-deployment.yml
+	kubectl apply -f k8s/services/api-service.yml
+	kubectl patch deployment.extensions/seeking-api -p '{"spec": {"template": {"spec": {"containers": [{"name": "seeking-api", "image": "$(IMAGE)", "imagePullPolicy": "Never"}]}}}}'
+	kubectl get deploy,po,svc
+
+.PHONY: stop-k8s-local ## Stop server on local k8s
+stop-k8s-local:
+	kubectl delete -f k8s/deployments/api-deployment.yml
+	kubectl delete -f k8s/services/api-service.yml
+	kubectl get deploy,po,svc
+
 .PHONY: template ## Generate yaml for k8s
 template:
 	sed -i ".tmpl" -e "s/[GCLOUD_PROJECT]/$(GCLOUD_PROJECT)/g" -e "s/[CREDENTIAL_FILE]/$(CREDENTIAL_FILE)/g" k8s/deployments/api-deployment.yml
