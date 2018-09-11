@@ -65,7 +65,8 @@ class Twitter:
             key=token.access_token if token else app.config['ACCESS_TOKEN'],
             secret=token.access_token_secret if token else app.config['ACCESS_TOKEN_SECRET'],
         )
-        return API(auth)
+        # https://stackoverflow.com/questions/21308762/avoid-twitter-api-limitation-with-tweepy
+        return API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     def get_user(self, screen_name: str):
         user = self.api.get_user(screen_name)
