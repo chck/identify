@@ -31,4 +31,4 @@ COPY seeking/ .
 RUN /bin/bash -lc 'pip3 install -U pip setuptools==40.2.0 && \
     pip3 install -r requirements.txt'
 
-CMD honcho start -f /app/seeking/procfile $PROCESSES
+CMD /bin/bash -lc "honcho start -f procfile $PROCESSES"

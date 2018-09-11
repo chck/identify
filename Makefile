@@ -18,17 +18,15 @@ console:
 
 .PHONY: run-local ## Run server on local depends on requirements.txt
 run-local:
-	honcho start -f procfile api crawler
+	cd seeking && honcho start -f procfile api crawler
 
 .PHONY: run-docker ## Run server on docker
 run-docker:
-	gcloud docker -- login
 	docker run --rm -p 8000:8000 -e PORT=8000 $(IMAGE):$(RECENT)
 
 .PHONY: template ## Generate yaml for k8s
 template:
 	sed -i ".tmpl" -e "s/[GCLOUD_PROJECT]/$(GCLOUD_PROJECT)/g" -e "s/[CREDENTIAL_FILE]/$(CREDENTIAL_FILE)/g" k8s/deployments/api-deployment.yml
-
 
 .PHONY: help ## View help
 help:
