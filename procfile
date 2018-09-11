@@ -1,0 +1,2 @@
+api: gunicorn -b 0.0.0.0:$PORT main:app
+crawler: psqworker main.crawling_queue
