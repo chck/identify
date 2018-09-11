@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seeking-api
+  labels:
+    app: seeking
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: seeking
+  template:
+    metadata:
+      labels:
+        app: seeking
+    spec:
+      containers:
+      - name: seeking-api
+        image: asia.gcr.io/[GCLOUD_PROJECT]/self-seeking
+        ports:
+        - containerPort: 8000
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /app/seeking/config/[CREDENTIAL_FILE]
