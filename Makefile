@@ -8,9 +8,23 @@ GOOGLE_APPLICATION_CREDENTIALS:=YOUR_GCLOUD_CREDENTIAL_JSON_PATH
 .PHONY: all
 all: help
 
+.PHONY: credential ## Get credential for GCP
+credential:
+	gcloud config set project $(GCLOUD_PROJECT)
+	gcloud auth configure-docker
+
 .PHONY: build ## Build image
 build:
-	docker build . -t $(IMAGE):$(DATE) -t $(IMAGE):latest
+	docker build . -f seeking/Dockerfile -t $(IMAGE):$(DATE) -t $(IMAGE):latest
+
+.PHONY: push ## Push image
+push:
+	docker push $(IMAGE):$(RECENT)
+	docker push $(IMAGE):latest
+
+.PHONY: pull ## Pull image
+pull:
+	docker pull $(IMAGE):latest
 
 .PHONY: console ## Run console in docker environment
 console:
