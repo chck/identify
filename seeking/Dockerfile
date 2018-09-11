@@ -31,4 +31,6 @@ COPY seeking/ .
 RUN /bin/bash -lc 'pip3 install -U pip setuptools==40.2.0 && \
     pip3 install -r requirements.txt'
 
+ENV GOOGLE_APPLICATION_CREDENTIALS /app/seeking/seeking/config/YOUR_GCLOUD_CREDENTIAL_JSON
+
 CMD /bin/bash -lc "honcho start -f procfile $PROCESSES"
