@@ -1,5 +1,7 @@
 GCLOUD_PROJECT:=YOUR_GCLOUD_ID
-IMAGE:=asia.gcr.io/$(GCLOUD_PROJECT)/self-seeking
+REGION:=YOUR_GCLOUD_REGION
+PRODUCT:=self-seeking
+IMAGE:=asia.gcr.io/$(GCLOUD_PROJECT)/$(PRODUCT)
 DATE:=$(shell date +"%Y-%m-%d-%H%M%S")
 RECENT:=$(shell docker images $(IMAGE) --format "{{.Tag}}" | head -1)
 CREDENTIAL_FILE:=YOUR_GCLOUD_CREDENTIAL_JSON
@@ -51,6 +53,48 @@ stop-k8s-local:
 	kubectl delete -f k8s/deployments/api-deployment.yml
 	kubectl delete -f k8s/services/api-service.yml
 	kubectl get deploy,po,svc
+
+.PHONY: create-cluster ## Create GKE cluster
+create-cluster:
+	gcloud config set project $(GCLOUD_PROJECT)
+	gcloud beta container clusters create $(PRODUCT)-cluster \
+		--num-nodes 3 \
+		--region "$(REGION)" \
+		--scopes "cloud-platform" \
+		--enable-autoscaling \
+		--min-nodes 3 \
+		--max-nodes 30
+
+.PHONY: deploy-api ## Deploy api to GKE
+deploy-api:
+	kubectl config use-context gke_$(GCLOUD_PROJECT)_$(REGION)_$(PRODUCT)-cluster
+	kubectl apply -f k8s/deployments/api-deployment.yml
+	kubectl get deploy,po,svc
+
+.PHONY: book-ip ## Reserve static ip on GCP
+book-ip:
+	gcloud config set project $(GCLOUD_PROJECT)
+	gcloud compute addresses create $(PRODUCT)-ip --region $(REGION)
+	gcloud compute addresses list --regions $(REGION)
+
+.PHONY: deploy-service ## Deploy service to GKE
+deploy-service:
+	kubectl config use-context gke_$(GCLOUD_PROJECT)_$(REGION)_$(PRODUCT)-cluster
+	kubectl apply -f k8s/services/api-service.yml
+	kubectl get deploy,po,svc
+
+.PHONY: deploy-crawler ## Deploy crawler to GKE
+deploy-crawler:
+	kubectl config use-context gke_$(GCLOUD_PROJECT)_$(REGION)_$(PRODUCT)-cluster
+	kubectl apply -f k8s/deployments/crawler-deployment.yml
+	kubectl get deploy,po,svc
+
+.PHONY: deploy-hpa ## Deploy horizontal pod autoscaler to GKE
+deploy-hpa:
+	kubectl config use-context gke_$(GCLOUD_PROJECT)_$(REGION)_$(PRODUCT)-cluster
+	kubectl apply -f k8s/hpas/api-hpa.yml
+	kubectl apply -f k8s/hpas/crawler-hpa.yml
+	kubectl get deploy,po,svc,hpa
 
 .PHONY: template ## Generate yaml for k8s
 template:
