@@ -9,7 +9,10 @@ RUN apt-get install -y \
         libsqlite3-dev \
         libffi-dev \
         locales \
-        locales-all && \
+        locales-all \
+        mecab \
+        libmecab-dev \
+        mecab-ipadic-utf8 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -25,7 +28,12 @@ RUN /bin/bash -lc 'anyenv install pyenv'
 RUN /bin/bash -lc 'pyenv install 2.7.15 && \
     pyenv install 3.6.6 && \
     pyenv global 2.7.15 3.6.6'
-   
+
+RUN git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git /tmp/neologd && \
+    mkdir -p /usr/local/lib/mecab/dic && \
+    /tmp/neologd/bin/install-mecab-ipadic-neologd -n -u -y && \
+    rm -rf /tmp/neologd
+
 WORKDIR /app/seeking/
 
 COPY seeking/ .

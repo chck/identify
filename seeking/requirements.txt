@@ -12,3 +12,4 @@ more-itertools>=4.3.0,<4.4.0
 gunicorn>=19.9.0,<20.0.0
 honcho>=1.0.1,<1.1.0
 dataclasses>=0.6.0,<0.7.0
+mecab-python3>=0.7.0,<0.8.0
