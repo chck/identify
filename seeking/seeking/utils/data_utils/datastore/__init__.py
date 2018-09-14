@@ -25,7 +25,7 @@ class Datastore:
         key = ds.key(self.kind, int(id))
         return self.from_ds(ds.get(key))
 
-    def find_all(self, limit=50, cursor=None):
+    def find_all(self, limit=300, cursor=None):
         ds = self.client
         query = ds.query(kind=self.kind)
         query_iter = query.fetch(limit=limit, start_cursor=cursor)

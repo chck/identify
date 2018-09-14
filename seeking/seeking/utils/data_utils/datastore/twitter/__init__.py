@@ -26,7 +26,7 @@ class Tweets:
         key = ds.key(self.kind, int(id))
         return self.from_ds(ds.get(key))
 
-    def find_all(self, user_id, limit=50, cursor=None):
+    def find_all(self, user_id, limit=300, cursor=None):
         ds = self.client
         query = ds.query(kind=self.kind, ancestor=ds.key('Users', user_id))
 
