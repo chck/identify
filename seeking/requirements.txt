@@ -6,6 +6,7 @@ google-cloud-datastore>=1.7.0,<1.8.0
 google-cloud-logging>=1.6.0,<1.7.0
 google-cloud-error-reporting>=0.30.0,<0.31.0
 google-cloud-pubsub>=0.37.2,<0.38.0
+google-cloud-storage>=1.12.0,<1.13.0
 psq>=0.7.0,<0.8.0
 Flask>=1.0.2,<1.1.0
 more-itertools>=4.3.0,<4.4.0
