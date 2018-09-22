@@ -10,3 +10,7 @@ indexes:
   ancestor: yes
   properties:
   - name: created_at
+- kind: PreprocessedTweets
+  ancestor: yes
+  properties:
+  - name: created_at
