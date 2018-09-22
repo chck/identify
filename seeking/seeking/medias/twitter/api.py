@@ -105,7 +105,7 @@ class Twitter:
             source=status.source,
             geo=status.geo,
             coordinates=status.coordinates,
-            place=status.place,
+            place=str(status.place),  # TODO: fix raw python object to jsonize
             created_at=status.created_at,
         ) for status in Cursor(self.api.user_timeline,
                                screen_name=screen_name,
