@@ -76,6 +76,30 @@ class Users(Datastore):
         super().__init__(kind=__class__.__name__)
 
 
+def fetch_all_users():
+    # TODO: Recursive
+    model = Users()
+    entities = []
+    chunk, cursor = model.find_all(limit=300)
+    entities += chunk
+    while cursor:
+        chunk, cursor = model.find_all(limit=300, cursor=cursor)
+        entities += chunk
+    return entities
+
+
+def fetch_all_tweets(user_id: int):
+    # TODO: Recursive
+    model = Tweets()
+    entities = []
+    chunk, cursor = model.find_all(user_id=user_id, limit=300)
+    entities += chunk
+    while cursor:
+        chunk, cursor = model.find_all(user_id=user_id, limit=300, cursor=cursor)
+        entities += chunk
+    return entities
+
+
 if __name__ == '__main__':
     # Tweets().delete(829680304642154496, 659730015811145728)
     Tweets().bulk_delete(ids=[829680304642154496, 659730015811145728], user_id=99008565)
