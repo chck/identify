@@ -33,7 +33,7 @@ class Datastore:
 
         entities = list(map(self.from_ds, page))
         next_cursor = (query_iter.next_page_token if query_iter.next_page_token else None)
-        return entities, next_cursor
+        return entities, next_cursor.decode(encoding='utf-8')
 
     def upsert(self, data, id=None, excluded_idx: Tuple[str] = ()):
         ds = self.client

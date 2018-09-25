@@ -10,7 +10,7 @@ from flask import (
 
 from seeking import logger
 from seeking import tasks
-from seeking.medias.twitter.service import crawl_user, crawl_tweets, delete_user as _delete_user
+from seeking.medias.twitter.service import crawl_user, delete_user as _delete_user
 from seeking.preprocessing.text import (
     nounize, discover_keywords, _generate_wordcloud, generate_wordclouds, vectorize
 )
@@ -35,9 +35,21 @@ def users(screen_name=None):
     """crawl twitter user"""
     if screen_name:
         entity = Users().find(crawl_user(screen_name))
+        return jsonify({
+            'data': entity,
+        }), 200
     else:
-        entity, _ = Users().find_all()
-    return jsonify(entity), 200
+        limit = request.args.get('limit', type=int)
+        cursor = request.args.get('cursor', type=str)
+        if cursor:
+            cursor = cursor.encode(encoding='utf-8')
+        entity, next_cursor = Users().find_all(limit=limit,
+                                               cursor=cursor)
+        return jsonify({
+            'data': entity,
+            'next_cursor': next_cursor,
+            'limit': limit,
+        }), 200
 
 
 @api.route("/twitter/users/<screen_name>/delete")
@@ -51,15 +63,39 @@ def delete_user(screen_name):
 @api.route("/twitter/tweets/<screen_name>")
 def tweets(screen_name):
     """crawl twitter tweets"""
-    entity, _ = Tweets().find_all(user_id=crawl_tweets(screen_name))
-    return jsonify(entity), 200
+    limit = request.args.get('limit', type=int)
+    cursor = request.args.get('cursor', type=str)
+    if cursor:
+        cursor = cursor.encode(encoding='utf-8')
+
+    entity, next_cursor = Tweets().find_all(user_id=crawl_user(screen_name),
+                                            limit=limit,
+                                            cursor=cursor)
+
+    return jsonify({
+        'data': entity,
+        'next_cursor': next_cursor,
+        'limit': limit,
+    }), 200
 
 
 @api.route("/twitter/replies/<screen_name>")
 def replies(screen_name):
     """crawl twitter replies"""
-    entity, _ = Replies().find_all(user_id=crawl_tweets(screen_name))
-    return jsonify(entity), 200
+    limit = request.args.get('limit', type=int)
+    cursor = request.args.get('cursor', type=str)
+    if cursor:
+        cursor = cursor.encode(encoding='utf-8')
+
+    entity, next_cursor = Replies().find_all(user_id=crawl_user(screen_name),
+                                             limit=limit,
+                                             cursor=cursor)
+
+    return jsonify({
+        'data': entity,
+        'next_cursor': next_cursor,
+        'limit': limit,
+    }), 200
 
 
 @api.route("/crawl/<screen_name>")
