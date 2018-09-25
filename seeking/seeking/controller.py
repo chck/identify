@@ -29,7 +29,7 @@ def index():
     return jsonify(funcs), 200
 
 
-@api.route("/twitter/users/")
+@api.route("/twitter/users")
 @api.route("/twitter/users/<screen_name>")
 def users(screen_name=None):
     """crawl twitter user"""
