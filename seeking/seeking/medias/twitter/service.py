@@ -40,10 +40,14 @@ def crawl_user(screen_name: str):
 def delete_user(screen_name: str):
     user = Twitter().get_user(screen_name)
     Users().delete(user.id)
-    tweets = Tweets()
-    _tweets, _ = tweets.find_all(user_id=user.id)
-    tweet_ids = [t.id for t in _tweets]
-    tweets.bulk_delete(tweet_ids, user_id=user.id)
+    PreprocessedUsers().delete(user.id)
+
+    tweet_ids = [int(t['id']) for t in fetch_all_tweets(user.id)]
+    Tweets().bulk_delete(tweet_ids, user_id=user.id)
+
+    tweet_ids = [int(t['id']) for t in fetch_all_parsed_tweets(user.id)]
+    PreprocessedTweets().bulk_delete(tweet_ids, user_id=user.id)
+
     return user.id
 
 
