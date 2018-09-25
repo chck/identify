@@ -45,7 +45,7 @@ class PreprocessedUsers:
 
         entities = list(map(self.from_ds, page))
         next_cursor = (query_iter.next_page_token if query_iter.next_page_token else None)
-        return entities, next_cursor
+        return entities, next_cursor.decode(encoding='utf-8') if next_cursor else None
 
     def upsert(self, data, excluded_idx: Tuple[str] = ()):
         ds = self.client
