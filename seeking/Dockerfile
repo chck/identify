@@ -29,8 +29,7 @@ RUN /bin/bash -lc 'pyenv install 2.7.15 && \
     pyenv install 3.6.6 && \
     pyenv global 2.7.15 3.6.6'
 
-RUN git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git /tmp/neologd && \
-    mkdir -p /usr/local/lib/mecab/dic && \
+RUN git clone --depth 1 https://github.com/chck/mecab-ipadic-neologd.git /tmp/neologd && \
     /tmp/neologd/bin/install-mecab-ipadic-neologd -n -u -y && \
     rm -rf /tmp/neologd
 
@@ -44,6 +43,7 @@ RUN /bin/bash -lc 'pip3 install -U pip setuptools==40.2.0 && \
 ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \
     LC_ALL="en_US.UTF-8" \
-    GOOGLE_APPLICATION_CREDENTIALS="/app/seeking/seeking/config/YOUR_GCLOUD_CREDENTIAL_JSON"
+    GOOGLE_APPLICATION_CREDENTIALS="/app/seeking/seeking/config/YOUR_GCLOUD_CREDENTIAL_JSON" \
+    MECAB_DICDIR="/usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd"
 
 CMD /bin/bash -lc "honcho start -f procfile $PROCESSES"

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import re
 from urllib.request import urlopen
 
@@ -54,10 +55,9 @@ def fetch_static_stopwords(en=True, ja=True):
 
 class MeCabParser:
     def __init__(self,
-                 dic_path='/usr/local/lib/mecab/dic/mecab-ipadic-neologd',
                  target_pos=['名詞', '動詞', '形容詞', '副詞', '連体詞']):
-        self.dic_path = dic_path
-        self.tagger = MeCab.Tagger('-d {}'.format(dic_path))
+        dic_path = os.environ.get('MECAB_DICDIR')
+        self.tagger = MeCab.Tagger('-d {}'.format(dic_path)) if dic_path else MeCab.Tagger()
         self.stopwords = fetch_static_stopwords(ja=False) + ['*']
         self.stop_contained_words = custom_contained_stopwords()
         self.target_pos = target_pos
