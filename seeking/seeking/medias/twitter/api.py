@@ -156,10 +156,13 @@ if __name__ == '__main__':
     from seeking.config.config import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
 
     file_path = Path(__file__).resolve().parent / '..' / '..' / 'config' / 'config.yml'
-    api = Twitter(Token(consumer_key=CONSUMER_KEY,
-                        consumer_secret=CONSUMER_SECRET,
-                        access_token=ACCESS_TOKEN,
-                        access_token_secret=ACCESS_TOKEN_SECRET)).api
+    client = Twitter(Token(consumer_key=CONSUMER_KEY,
+                           consumer_secret=CONSUMER_SECRET,
+                           access_token=ACCESS_TOKEN,
+                           access_token_secret=ACCESS_TOKEN_SECRET))
     screen_name = 'masason'
-    x = api.user_timeline(screen_name)
-    print(x[0])
+    # x = client.api.search(q='from:%s' % screen_name)
+    # x = client.api.search_universal(q='cuisine', max_id=114514, modules='status')
+    # x = client.get_tweets(screen_name, exclude_replies=False)
+    # x = client.api.user_timeline(screen_name=screen_name)
+    # print(x[0])
