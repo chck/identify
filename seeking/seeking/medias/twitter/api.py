@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from pathlib import Path
-from typing import List
+from typing import List, Tuple, Optional
 
 from dataclasses import dataclass
 from flask import current_app as app
 from tweepy import (
     OAuthHandler, API, Cursor
 )
+from tweepy.error import TweepError
 
 from seeking.medias.twitter.utils import Token
 
@@ -22,6 +23,7 @@ class Tweet:
     geo: str
     coordinates: str
     place: str
+    in_reply_to_status_id: int
     created_at: datetime
 
 
@@ -96,23 +98,58 @@ class Twitter:
             updated_at=datetime.now(),
         )
 
-    def get_tweets(self, screen_name: str) -> List[Tweet]:
+    def get_tweets(self, screen_name: str, exclude_replies=True) -> List[Tweet]:
         return [Tweet(
             id=int(status.id_str),
             user_id=int(status.author.id_str),
-            screen_name=screen_name,
+            screen_name=status.user.screen_name,
             text=status.text,
             source=status.source,
             geo=status.geo,
             coordinates=status.coordinates,
             place=str(status.place),  # TODO: fix raw python object to jsonize
+            in_reply_to_status_id=int(status.in_reply_to_status_id_str) if status.in_reply_to_status_id_str else None,
             created_at=status.created_at,
         ) for status in Cursor(self.api.user_timeline,
                                screen_name=screen_name,
                                count=200,
                                include_rts=False,
-                               trim_user=True,
-                               exclude_replies=True).items()]
+                               trim_user=False,
+                               exclude_replies=exclude_replies).items()]
+
+    def get_tweet(self, tweet_id: int) -> Optional[Tweet]:
+        try:
+            status = self.api.get_status(tweet_id)
+        except TweepError:
+            return None
+
+        return Tweet(
+            id=int(status.id_str),
+            user_id=int(status.author.id_str),
+            screen_name=status.user.screen_name,
+            text=status.text,
+            source=status.source,
+            geo=status.geo,
+            coordinates=status.coordinates,
+            place=str(status.place),  # TODO: fix raw python object to jsonize
+            in_reply_to_status_id=int(status.in_reply_to_status_id_str) if status.in_reply_to_status_id_str else None,
+            created_at=status.created_at,
+        )
+
+    def get_replies(self, screen_name: str) -> List[Tuple[Tweet, Tweet]]:
+        replies = [tweet for tweet in self.get_tweets(
+            screen_name, exclude_replies=False
+        ) if tweet.in_reply_to_status_id]
+
+        for reply in replies:
+            root_tweet = self.get_tweet(reply.in_reply_to_status_id)
+            if root_tweet:
+                yield (
+                    root_tweet,
+                    reply,
+                )
+            else:
+                continue
 
 
 if __name__ == '__main__':

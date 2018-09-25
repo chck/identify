@@ -4,7 +4,7 @@ from flask import current_app as app
 from google.cloud import pubsub
 
 from seeking import logger
-from seeking.medias.twitter.service import crawl_tweets
+from seeking.medias.twitter.service import crawl_tweets, crawl_replies
 
 
 def get_crawling_queue():
@@ -18,6 +18,9 @@ def get_crawling_queue():
                      extra_context=app.app_context)
 
 
-def process_crawling(screen_name: str):
+def process_crawling(screen_name: str, module=None):
     logger.info('crawling is started (screen_name: {})'.format(screen_name))
-    crawl_tweets(screen_name)
+    if module == 'reply':
+        crawl_replies(screen_name)
+    else:
+        crawl_tweets(screen_name)

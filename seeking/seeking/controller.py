@@ -4,13 +4,17 @@ from datetime import datetime
 from flask import (
     Blueprint,
     jsonify,
+    request,
     current_app as app,
 )
 
 from seeking import logger
 from seeking import tasks
 from seeking.medias.twitter.service import crawl_user, crawl_tweets, delete_user as _delete_user
-from seeking.utils.data_utils.datastore.twitter import Users, Tweets
+from seeking.preprocessing.text import (
+    nounize, discover_keywords, _generate_wordcloud, generate_wordclouds, vectorize
+)
+from seeking.utils.data_utils.datastore.twitter import Users, Tweets, Replies
 
 api = Blueprint('api', __name__)
 
@@ -51,12 +55,21 @@ def tweets(screen_name):
     return jsonify(entity), 200
 
 
+@api.route("/twitter/replies/<screen_name>")
+def replies(screen_name):
+    """crawl twitter replies"""
+    entity, _ = Replies().find_all(user_id=crawl_tweets(screen_name))
+    return jsonify(entity), 200
+
+
 @api.route("/crawl/<screen_name>")
 def kick_crawling(screen_name: str):
     """kick crawling task"""
+    module = request.args.get('module')
+
     logger.info('kick crawling (screen_name: {})'.format(screen_name))
     q = tasks.get_crawling_queue()
-    q.enqueue(tasks.crawl_tweets, screen_name)
+    q.enqueue(tasks.process_crawling, screen_name, module)
 
     return jsonify({
         'code': 200,

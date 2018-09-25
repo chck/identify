@@ -1,12 +1,32 @@
 # -*- coding: utf-8 -*-
 from seeking.medias.twitter.api import Twitter
-from seeking.utils.data_utils.datastore.twitter import Users, Tweets
+from seeking.utils.data_utils.datastore.twitter import (
+    Users, Tweets, fetch_all_tweets
+)
+from seeking.utils.data_utils.datastore.twitter.preprocessed_tweets import PreprocessedTweets, fetch_all_parsed_tweets
+from seeking.utils.data_utils.datastore.twitter.preprocessed_users import PreprocessedUsers
+from seeking.utils.data_utils.datastore.twitter.replies import Reply, Replies
 
 
 def crawl_tweets(screen_name: str):
     user_id = crawl_user(screen_name)
     tweets = Tweets()
     tweets.bulk_upsert(Twitter().get_tweets(screen_name), user_id=user_id)
+    return user_id
+
+
+def crawl_replies(screen_name: str):
+    user_id = crawl_user(screen_name)
+    replies = [Reply(
+        id=reply.id,
+        user_id=reply.user_id,
+        screen_name=reply.screen_name,
+        target_text=root.text,
+        source_text=reply.text,
+        created_at=reply.created_at,
+    ) for (root, reply) in Twitter().get_replies(screen_name)]
+    model = Replies()
+    model.bulk_upsert(replies, user_id=user_id)
     return user_id
 
 
