@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from seeking.medias.twitter.api import Twitter
-from seeking.utils.data_utils.datastore.twitter import (
+from identify.medias.twitter.api import Twitter
+from identify.utils.data_utils.datastore.twitter import (
     Users, Tweets, fetch_all_tweets
 )
-from seeking.utils.data_utils.datastore.twitter.preprocessed_tweets import PreprocessedTweets, fetch_all_parsed_tweets
-from seeking.utils.data_utils.datastore.twitter.preprocessed_users import PreprocessedUsers
-from seeking.utils.data_utils.datastore.twitter.replies import Reply, Replies
+from identify.utils.data_utils.datastore.twitter.preprocessed_tweets import PreprocessedTweets, fetch_all_parsed_tweets
+from identify.utils.data_utils.datastore.twitter.preprocessed_users import PreprocessedUsers
+from identify.utils.data_utils.datastore.twitter.replies import Reply, Replies
 
 
 def crawl_tweets(screen_name: str):

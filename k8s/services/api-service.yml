@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: seeking-api
+  name: identify-api
   labels:
-    app: seeking
+    app: identify
 spec:
   type: LoadBalancer
   selector:
-    app: seeking
+    app: identify
   ports:
   - protocol: TCP
     port: 80

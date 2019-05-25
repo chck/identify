@@ -6,7 +6,7 @@ from os.path import join, basename
 from flask import current_app as app
 from google.cloud import storage
 
-from seeking.utils.string_utils import to_snake
+from identify.utils.string_utils import to_snake
 
 
 class Seeking:

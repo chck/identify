@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from google.cloud.datastore import Entity
 from more_itertools import chunked
 
-from seeking.utils.data_utils.datastore import Datastore
+from identify.utils.data_utils.datastore import Datastore
 
 
 @dataclass

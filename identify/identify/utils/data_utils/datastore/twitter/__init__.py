@@ -5,7 +5,7 @@ from google.cloud import datastore
 from google.cloud.datastore import Entity
 from more_itertools import chunked
 from .replies import Replies
-from seeking.utils.data_utils.datastore import Datastore
+from identify.utils.data_utils.datastore import Datastore
 
 
 class Tweets:

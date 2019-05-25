@@ -3,8 +3,8 @@ import psq
 from flask import current_app as app
 from google.cloud import pubsub
 
-from seeking import logger
-from seeking.medias.twitter.service import crawl_tweets, crawl_replies
+from identify import logger
+from identify.medias.twitter.service import crawl_tweets, crawl_replies
 
 
 def get_crawling_queue():

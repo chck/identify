@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from seeking import create_app
-from seeking import tasks
-from seeking.config import config
+from identify import create_app
+from identify import tasks
+from identify.config import config
 
 app = create_app(config)
 

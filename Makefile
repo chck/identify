@@ -1,6 +1,6 @@
 GCLOUD_PROJECT:=YOUR_GCLOUD_ID
 REGION:=YOUR_GCLOUD_REGION
-PRODUCT:=self-seeking
+PRODUCT:=self-identify
 IMAGE:=asia.gcr.io/$(GCLOUD_PROJECT)/$(PRODUCT)
 DATE:=$(shell date +"%Y-%m-%d-%H%M%S")
 RECENT:=$(shell docker images $(IMAGE) --format "{{.Tag}}" | head -1)
@@ -17,7 +17,7 @@ credential:
 
 .PHONY: build ## Build image
 build:
-	docker build . -f seeking/Dockerfile -t $(IMAGE):$(DATE) -t $(IMAGE):latest
+	docker build . -f identify/Dockerfile -t $(IMAGE):$(DATE) -t $(IMAGE):latest
 
 .PHONY: push ## Push image
 push:
@@ -30,11 +30,11 @@ pull:
 
 .PHONY: console ## Run console in docker environment
 console:
-	docker run --rm -it -v $(PWD)/seeking:/app/seeking $(IMAGE):$(RECENT) bash -l
+	docker run --rm -it -v $(PWD)/identify:/app/identify $(IMAGE):$(RECENT) bash -l
 
 .PHONY: run-local ## Run server on local depends on requirements.txt
 run-local:
-	cd seeking && honcho start -f procfile api crawler
+	cd identify && honcho start -f procfile api crawler
 
 .PHONY: run-docker ## Run server on docker
 run-docker:
@@ -45,7 +45,7 @@ run-k8s-local:
 	kubectl config use-context docker-for-desktop
 	kubectl apply -f k8s/deployments/api-deployment.yml
 	kubectl apply -f k8s/services/api-service.yml
-	kubectl patch deployment.extensions/seeking-api -p '{"spec": {"template": {"spec": {"containers": [{"name": "seeking-api", "image": "$(IMAGE)", "imagePullPolicy": "Never"}]}}}}'
+	kubectl patch deployment.extensions/identify-api -p '{"spec": {"template": {"spec": {"containers": [{"name": "identify-api", "image": "$(IMAGE)", "imagePullPolicy": "Never"}]}}}}'
 	kubectl get deploy,po,svc
 
 .PHONY: stop-k8s-local ## Stop server on local k8s

@@ -1,13 +1,13 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: seeking-crawler-hpa
+  name: identify-crawler-hpa
   namespace: default
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: seeking-crawler
+    name: identify-crawler
   minReplicas: 1
   maxReplicas: 128
   metrics:

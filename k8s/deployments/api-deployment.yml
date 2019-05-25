@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: seeking-api
+  name: identify-api
   labels:
-    app: seeking
+    app: identify
 spec:
   replicas: 1
   strategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: seeking
+      app: identify
   template:
     metadata:
       labels:
-        app: seeking
+        app: identify
     spec:
       containers:
-      - name: seeking-api
-        image: asia.gcr.io/YOUR_GCLOUD_ID/self-seeking
+      - name: identify-api
+        image: asia.gcr.io/YOUR_GCLOUD_ID/identify
         ports:
         - containerPort: 8000
         env:

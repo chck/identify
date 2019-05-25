@@ -10,7 +10,7 @@ from tweepy import (
 )
 from tweepy.error import TweepError
 
-from seeking.medias.twitter.utils import Token
+from identify.medias.twitter.utils import Token
 
 
 @dataclass
@@ -153,7 +153,7 @@ class Twitter:
 
 
 if __name__ == '__main__':
-    from seeking.config.config import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
+    from identify.config.config import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
 
     file_path = Path(__file__).resolve().parent / '..' / '..' / 'config' / 'config.yml'
     client = Twitter(Token(consumer_key=CONSUMER_KEY,

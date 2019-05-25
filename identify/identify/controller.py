@@ -8,13 +8,13 @@ from flask import (
     current_app as app,
 )
 
-from seeking import logger
-from seeking import tasks
-from seeking.medias.twitter.service import crawl_user, delete_user as _delete_user
-from seeking.preprocessing.text import (
+from identify import logger
+from identify import tasks
+from identify.medias.twitter.service import crawl_user, delete_user as _delete_user
+from identify.preprocessing.text import (
     nounize, discover_keywords, _generate_wordcloud, generate_wordclouds, vectorize
 )
-from seeking.utils.data_utils.datastore.twitter import Users, Tweets, Replies
+from identify.utils.data_utils.datastore.twitter import Users, Tweets, Replies
 
 api = Blueprint('api', __name__)
 

@@ -29,7 +29,7 @@ def create_app(config, debug=False, testing=False):
         client.setup_logging(INFO)
 
     # Register blueprint
-    from seeking.controller import api
+    from identify.controller import api
     app.register_blueprint(api, url_prefix='/api')
 
     # Add a default root route
