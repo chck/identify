@@ -1,5 +1,5 @@
 # identify
->Identify your personality through your social network.
+>Identify their personality through their social network.
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/chck/identify/blob/master/LICENSE)
 
