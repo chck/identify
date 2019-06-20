@@ -117,3 +117,6 @@ dmypy.json
 # my configuration
 config.py
 *.json
+
+# direnv
+.envrc

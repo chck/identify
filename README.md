@@ -5,9 +5,14 @@
 
 ## Requirements
 ```
-Python ~> 3.6.6
-Docker ~> 18.06.1
-Kubernetes ~> 1.10.3
+Python ~> 3.7.x
+Docker ~> 18.09.x
+Kubernetes ~> 1.10.x
+```
+
+## Install dependencies
+```
+make install
 ```
 
 ## Usage

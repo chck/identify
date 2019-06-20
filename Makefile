@@ -1,6 +1,6 @@
 GCLOUD_PROJECT:=YOUR_GCLOUD_ID
 REGION:=YOUR_GCLOUD_REGION
-PRODUCT:=self-identify
+PRODUCT:=identify
 IMAGE:=asia.gcr.io/$(GCLOUD_PROJECT)/$(PRODUCT)
 DATE:=$(shell date +"%Y-%m-%d-%H%M%S")
 RECENT:=$(shell docker images $(IMAGE) --format "{{.Tag}}" | head -1)
@@ -99,6 +99,10 @@ deploy-hpa:
 .PHONY: template ## Generate yaml for k8s
 template:
 	sed -i ".tmpl" -e "s/[GCLOUD_PROJECT]/$(GCLOUD_PROJECT)/g" -e "s/[CREDENTIAL_FILE]/$(CREDENTIAL_FILE)/g" k8s/deployments/api-deployment.yml
+
+.PHONY: install ## Install dependencies
+install:
+	cd $(PRODUCT) && pipenv install -e '.' && pipenv install -e '.[dev]'
 
 .PHONY: help ## View help
 help:
